@@ -13,8 +13,7 @@
 
  try {
  const userDetailsResponse = await fetch("https://bst-dev.cisco.com/api/getUserDetails", {
- method: "GET",
- credentials: "include"
+ method: "GET"
  });
  const userDetails = await userDetailsResponse.text();
  outputElement.textContent = `First request:\nGET /api/getUserDetails HTTP/1.1\nHost: bst-dev.cisco.com\n\nPII: ${userDetails}\n\n`;
